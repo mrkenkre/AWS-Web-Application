@@ -14,7 +14,7 @@ async function authenticate(req, res) {
   //     return res.status(401).send("Unauthorized!");
   //   }
   if (!req.headers.authorization) {
-    res.status(403).send("Unauthorized: Please pass valid credentials.");
+    res.status(401).send("Unauthorized: Please pass valid credentials.");
     return false;
   }
 
