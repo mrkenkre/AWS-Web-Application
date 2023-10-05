@@ -50,36 +50,40 @@ async function postassg(req, res) {
 }
 
 async function getassg(req, res) {
-  try {
-    const assignmentId = req.params.id;
-    const assignment = await Assignment.findByPk(assignmentId, {
-      attributes: { exclude: ["userid"] },
-    });
+  if (await authenticate(req, res)) {
+    try {
+      const assignmentId = req.params.id;
+      const assignment = await Assignment.findByPk(assignmentId, {
+        attributes: { exclude: ["userid"] },
+      });
 
-    if (!assignment) {
-      return res.status(404).json({ error: "Assignment not found" });
+      if (!assignment) {
+        return res.status(404).json({ error: "Assignment not found" });
+      }
+      return res.status(200).json(assignment);
+    } catch (error) {
+      console.error("Error retrieving assignment:", error);
+      return res.status(500).json({ error: "Internal Server Error" });
     }
-    return res.status(200).json(assignment);
-  } catch (error) {
-    console.error("Error retrieving assignment:", error);
-    return res.status(500).json({ error: "Internal Server Error" });
   }
 }
 
 async function getallassg(req, res) {
-  try {
-    const assignmentId = req.params.id;
-    const assignment = await Assignment.findAll(assignmentId, {
-      attributes: { exclude: ["userid"] },
-    });
+  if (await authenticate(req, res)) {
+    try {
+      const assignmentId = req.params.id;
+      const assignment = await Assignment.findAll(assignmentId, {
+        attributes: { exclude: ["userid"] },
+      });
 
-    if (!assignment) {
-      return res.status(404).json({ error: "Assignments not found" });
+      if (!assignment) {
+        return res.status(404).json({ error: "Assignments not found" });
+      }
+      return res.status(200).json(assignment);
+    } catch (error) {
+      console.error("Error retrieving assignments:", error);
+      return res.status(500).json({ error: "Internal Server Error" });
     }
-    return res.status(200).json(assignment);
-  } catch (error) {
-    console.error("Error retrieving assignments:", error);
-    return res.status(500).json({ error: "Internal Server Error" });
   }
 }
 

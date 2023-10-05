@@ -40,7 +40,6 @@ async function authenticate(req, res) {
 
       const passwordMatch = await bcrypt.compare(password, user.password);
 
-      // If the passwords match, return true; otherwise, return false
       if (passwordMatch) {
         //console.log("herrrrr: " + user.id);
         req.user = user;
@@ -50,7 +49,6 @@ async function authenticate(req, res) {
         return false;
       }
     } catch (error) {
-      // Handle any errors that may occur during the authentication process
       console.error("Authentication error:", error);
       return false;
     }
