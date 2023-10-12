@@ -9,15 +9,16 @@ const _ = require("lodash");
 async function postassg(req, res) {
   //console.log("Stat: " + (await authenticate(req, res)));
 
-  if (await authenticate(req, res)) {
-    if (JSON.stringify(req.body).length <= 2) {
-      console.log("Request payload not found.");
-      res.status(400).send("Request payload not found.");
-    } else {
+  if (JSON.stringify(req.body).length <= 2) {
+    console.log("Please pass request body.");
+    res.status(400).send("Please pass request body.");
+  } else {
+    if (await authenticate(req, res)) {
       try {
         //console.log("IDDD: " + req.user.id);
         const { name, points, num_of_attempts, deadline } = req.body;
-
+        if (!deadline)
+          return res.status(400).json({ error: "Deadline cannot be null." });
         const assignmentInstance = await Assignment.create({
           name,
           points,
@@ -45,7 +46,7 @@ async function postassg(req, res) {
         }
 
         console.error("Error:", error);
-        res.status(500).json({ error: "Error submitting the assignment." });
+        res.status(500).json({ error: "Internal Server Error" });
       }
     }
     //   else {
@@ -57,7 +58,7 @@ async function postassg(req, res) {
 async function getassg(req, res) {
   if (JSON.stringify(req.body).length > 2) {
     console.log("Request payload not allowed.");
-    res.status(400).send("Request payload not allowed.");
+    res.status(403).send("Request payload not allowed.");
   } else {
     if (await authenticate(req, res)) {
       try {
@@ -67,12 +68,12 @@ async function getassg(req, res) {
         });
 
         if (!assignment) {
-          return res.status(204).json({ error: "Assignment not found" });
+          return res.status(404).json({ error: "Assignment not found" });
         }
         return res.status(200).json(assignment);
       } catch (error) {
         console.error("Error retrieving assignment:", error);
-        return res.status(500).json({ error: "Error retrieving assignment" });
+        return res.status(500).json({ error: "Unexpected error." });
       }
     }
   }
@@ -81,18 +82,19 @@ async function getassg(req, res) {
 async function getallassg(req, res) {
   if (JSON.stringify(req.body).length > 2) {
     console.log("Request payload not allowed.");
-    res.status(400).send("Request payload not allowed.");
+    res.status(403).send("Request payload not allowed.");
   } else {
     if (await authenticate(req, res)) {
       try {
-        const assignmentId = req.params.id;
-        const assignment = await Assignment.findAll(assignmentId, {
+        //const assignmentId = req.params.id;
+        const assignment = await Assignment.findAll({
           attributes: { exclude: ["userid"] },
         });
 
-        if (!assignment) {
-          return res.status(204).json({ error: "Assignments not found" });
+        if (assignment.length === 0) {
+          return res.status(404).json({ error: "Assignments not found" });
         }
+        //const { userid, ...assignmentWithoutUserId } = assignment;
         return res.status(200).json(assignment);
       } catch (error) {
         console.error("Error retrieving assignments:", error);
@@ -103,24 +105,28 @@ async function getallassg(req, res) {
 }
 
 async function putassg(req, res) {
-  try {
-    if (await authenticate(req, res)) {
-      if (JSON.stringify(req.body).length <= 2) {
-        console.log("Request payload not found.");
-        res.status(400).send("Request payload not found.");
-      } else {
+  if (JSON.stringify(req.body).length <= 2) {
+    console.log("Please pass request body.");
+    res.status(400).send("Please pass request body.");
+  } else {
+    try {
+      if (await authenticate(req, res)) {
         //console.log("Authenticated!+" + req.user.id);
 
         const assignmentId = req.params.id;
         const assignment = await Assignment.findByPk(assignmentId);
 
+        if (!assignmentId) {
+          return res.status(400).json({ error: "Incorrect id." });
+        }
+
         if (!assignment) {
-          return res.status(400).json({ error: "Assignment not found" });
+          return res.status(404).json({ error: "Assignment not found" });
         }
 
         if (req.user.id != assignment.userid) {
           return res
-            .status(401)
+            .status(403)
             .json({ error: "Unauthorized user for this assignment." });
         }
 
@@ -145,39 +151,61 @@ async function putassg(req, res) {
               new Date(assignment.deadline).toISOString());
 
         if (hasChanges) {
-          console.log("Changes found!!!");
-          // Update the assignment with the new values
-          await assignment.update({
-            name,
-            points,
-            num_of_attempts,
-            deadline,
-          });
-          return res.status(201).json(assignment);
+          try {
+            console.log("Changes found!!!");
+            // Update the assignment with the new values
+            console.log("Nameee:" + name);
+            await assignment.update({
+              name,
+              points,
+              num_of_attempts,
+              deadline,
+            });
+            return res.status(204).json(assignment);
+          } catch (error) {
+            if (error.name === "SequelizeUniqueConstraintError") {
+              return res.status(400).json({
+                error: "Assignment with the same name already exists.",
+              });
+            }
+
+            if (error.name === "SequelizeValidationError") {
+              const validationErrors = error.errors.map((err) => ({
+                field: err.path,
+                message: err.message,
+              }));
+
+              return res.status(400).json({ errors: validationErrors });
+            }
+          }
         } else {
           console.log("Changes NOT found!!!");
           return res.status(304).json("No changes found!!!");
         }
       }
+    } catch (error) {
+      console.error("Error updating assignment:", error);
+      return res.status(500).json({ error: "Internal Server Error" });
     }
-  } catch (error) {
-    console.error("Error updating assignment:", error);
-    return res.status(500).json({ error: "Error updating assignment" });
   }
 }
 
 async function deleteassg(req, res) {
   if (JSON.stringify(req.body).length > 2) {
     console.log("Request payload not allowed.");
-    res.status(400).send();
+    res.status(403).send("Request payload not allowed.");
   } else {
     try {
       if (await authenticate(req, res)) {
         const assignmentId = req.params.id;
         const assignment = await Assignment.findByPk(assignmentId);
 
+        if (!assignmentId) {
+          return res.status(400).json({ error: "Incorrect id." });
+        }
+
         if (!assignment) {
-          return res.status(204).json({ error: "Assignment not found" });
+          return res.status(404).json({ error: "Assignment not found" });
         }
 
         if (req.user.id != assignment.userid) {
@@ -194,10 +222,9 @@ async function deleteassg(req, res) {
         }
       }
     } catch (error) {
-      return res.status(500).json({
-        message: "Error deleting the assignment.",
-        error: error.message,
-      });
+      return res
+        .status(500)
+        .json({ message: "Server error", error: error.message });
     }
   }
 }
