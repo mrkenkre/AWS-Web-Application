@@ -37,4 +37,10 @@ jobs:
         run: sleep 20
 
       - name: Run tests
+        env:
+          DB_NAME: secrets.DB_NAME
+          DB_USER: secrets.DB_USER
+          DB_PASSWORD: secrets.DB_PASSWORD
+          DB_HOST: secrets.DB_HOST
+          DB_DIALECT: secrets.DB_DIALECT
         run: npm test
