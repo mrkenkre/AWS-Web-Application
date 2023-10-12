@@ -1,8 +1,7 @@
 const chai = require("chai");
 const chaiHttp = require("chai-http");
-const app = require("../app");
-
-const { expect } = chai;
+const app = require("../app"); // Import your Express app here
+const expect = chai.expect;
 
 chai.use(chaiHttp);
 
@@ -13,19 +12,13 @@ describe("/healthz API", () => {
       .get("/healthz")
       .end((err, res) => {
         if (err) {
-          console.error(err); // Log the error
-          process.exit(1); // Exit with a negative response
+          console.error(err);
+          process.exit(1);
         } else {
           expect(res).to.have.status(200);
-          // You can also add additional checks here
-          // expect(res.body).to.have.property("status").eql("Success");
           done();
+          process.exit(0);
         }
       });
   });
-});
-
-after(() => {
-  console.log("All tests have completed.");
-  process.exit(0);
 });
