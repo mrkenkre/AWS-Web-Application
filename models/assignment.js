@@ -17,7 +17,6 @@ const Assignment = sequelize.define(
       validate: {
         notEmpty: true,
       },
-      unique: true,
     },
     points: {
       type: Sequelize.INTEGER,
@@ -35,6 +34,9 @@ const Assignment = sequelize.define(
         min: 1,
         max: 3,
         notEmpty: true,
+        isInt: {
+          msg: "Number of attempts must be an integer.",
+        },
       },
     },
     deadline: {
