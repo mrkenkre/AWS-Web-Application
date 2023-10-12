@@ -12,9 +12,15 @@ describe("/healthz API", () => {
       .request(app)
       .get("/healthz")
       .end((err, res) => {
-        expect(res).to.have.status(200);
-        // expect(res.body).to.have.property("status").eql("Success");
-        done();
+        if (err) {
+          console.error(err); // Log the error
+          process.exit(1); // Exit with a negative response
+        } else {
+          expect(res).to.have.status(200);
+          // You can also add additional checks here
+          // expect(res.body).to.have.property("status").eql("Success");
+          done();
+        }
       });
   });
 });

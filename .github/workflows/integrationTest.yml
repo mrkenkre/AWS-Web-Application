@@ -14,8 +14,8 @@ jobs:
       mariadb:
         image: mariadb:10.6
         env:
-          MARIADB_ROOT_PASSWORD: "root"
-          MARIADB_DATABASE: "nodemysql"
+          MARIADB_ROOT_PASSWORD: secrets.DB_PASSWORD
+          MARIADB_DATABASE: secrets.DB_NAME
           MARIADB_ROOT_HOST: "%"
         ports:
           - 3306:3306
@@ -32,6 +32,9 @@ jobs:
 
       - name: Install dependencies
         run: npm install
+
+      - name: Wait for MySQL to start
+        run: sleep 20
 
       - name: Run tests
         run: npm test
