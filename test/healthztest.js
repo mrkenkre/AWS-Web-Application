@@ -27,7 +27,7 @@ chai.use(chaiHttp);
 
 describe("Healthz Endpoint", () => {
   it("should return a 200 status", async () => {
-    const response = await chai.request(app).get("/healthzz");
+    const response = await chai.request(app).get("/healthz");
     expect(response.status).to.equal(200);
   });
 });
