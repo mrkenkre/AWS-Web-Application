@@ -4,7 +4,7 @@
   "description": "API to check health of MySql DB.",
   "main": "app.js",
   "scripts": {
-    "test": "mocha"
+    "test": "mocha --exit"
   },
   "author": "",
   "license": "ISC",
