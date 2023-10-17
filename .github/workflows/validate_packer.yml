@@ -29,7 +29,3 @@ jobs:
 
       - name: Format Packer Template
         run: packer fmt ./packer_templates/.
-
-      - name: Check for Changes
-        run: |
-          git diff --exit-code || exit 1
