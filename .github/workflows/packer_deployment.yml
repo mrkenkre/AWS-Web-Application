@@ -26,4 +26,4 @@ jobs:
         run: packer init ./packer_templates/.
 
       - name: Deploy Packer Template
-        run: packer build ./packer_templates/aws_template.pkr.hcl
+        run: packer build ./packer_templates/.
