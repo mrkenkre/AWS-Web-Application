@@ -1,0 +1,37 @@
+name: Validate packer template
+
+on:
+  pull_request:
+    branches:
+      - dev
+      - main
+    paths:
+      - 'packer_templates\aws_template.pkr.hcl'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Install Packer
+        run: |
+          wget https://releases.hashicorp.com/packer/1.8.6/packer_1.8.6_linux_amd64.zip
+          unzip packer_1.8.6_linux_amd64.zip
+          sudo mv packer /usr/local/bin/
+          packer --version
+        shell: bash
+
+      - name: Validate Packer Template
+        run: packer validate packer_templates/aws_template.json
+
+      - name: Format Packer Template
+        run: |
+          packer fmt -check=true packer_templates/aws_template.json || exit 1
+        continue-on-error: true
+
+      - name: Check for Changes
+        run: |
+          git diff --exit-code || exit 1
