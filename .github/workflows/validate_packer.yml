@@ -5,8 +5,6 @@ on:
     branches:
       - dev
       - main
-    paths:
-      - "packer_templates/aws_template.pkr.hcl"
 
 jobs:
   validate:
@@ -25,11 +23,11 @@ jobs:
         shell: bash
 
       - name: Validate Packer Template
-        run: packer validate packer_templates/aws_template.json
+        run: packer validate ./packer_templates/aws_template.json
 
       - name: Format Packer Template
         run: |
-          packer fmt -check=true packer_templates/aws_template.json || exit 1
+          packer fmt -check=true ./packer_templates/aws_template.json || exit 1
         continue-on-error: true
 
       - name: Check for Changes

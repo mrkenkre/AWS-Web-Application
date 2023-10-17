@@ -48,6 +48,6 @@ build {
   ]
 
   provisioner "shell" {
-    script="./setup.sh"
+    script=".scripts/setup.sh"
   }
 }
