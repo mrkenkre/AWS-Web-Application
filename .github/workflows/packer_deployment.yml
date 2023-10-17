@@ -5,6 +5,8 @@ on:
     branches:
       - dev
       - main
+    paths:
+      - "packer_templates/aws_template.pkr.hcl"
 
 jobs:
   deploy:
@@ -23,4 +25,4 @@ jobs:
         shell: bash
 
       - name: Deploy Packer Template
-        run: packer build packer_templates/aws_template.pkr.hcl
+        run: packer build packer_templates\aws_template.pkr.hcl
