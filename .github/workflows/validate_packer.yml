@@ -7,7 +7,6 @@ on:
       - main
     paths:
       - "packer_templates/aws_template.pkr.hcl"
-
 jobs:
   validate:
     runs-on: ubuntu-latest
