@@ -28,9 +28,7 @@ jobs:
         run: packer validate ./packer_templates/.
 
       - name: Format Packer Template
-        run: |
-          packer fmt -check=true ./packer_templates/. || exit 1
-        continue-on-error: true
+        run: packer fmt ./packer_templates/.
 
       - name: Check for Changes
         run: |
