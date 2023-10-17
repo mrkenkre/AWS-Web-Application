@@ -23,11 +23,11 @@ jobs:
         shell: bash
 
       - name: Validate Packer Template
-        run: packer validate ./packer_templates/aws_template.json
+        run: packer validate ./packer_templates/.
 
       - name: Format Packer Template
         run: |
-          packer fmt -check=true ./packer_templates/aws_template.json || exit 1
+          packer fmt -check=true ./packer_templates/. || exit 1
         continue-on-error: true
 
       - name: Check for Changes
