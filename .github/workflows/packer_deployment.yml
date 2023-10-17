@@ -1,0 +1,26 @@
+name: Deploy Packer Template on Merge
+
+on:
+  push:
+    branches:
+      - dev
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Install Packer
+        run: |
+          wget https://releases.hashicorp.com/packer/1.8.6/packer_1.8.6_linux_amd64.zip
+          unzip packer_1.8.6_linux_amd64.zip
+          sudo mv packer /usr/local/bin/
+          packer --version
+        shell: bash
+
+      - name: Deploy Packer Template
+        run: packer build packer_templates/aws_template.pkr.hcl
