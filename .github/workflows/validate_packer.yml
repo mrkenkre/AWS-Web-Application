@@ -6,7 +6,7 @@ on:
       - dev
       - main
     paths:
-      - 'packer_templates\aws_template.pkr.hcl'
+      - "packer_templates/aws_template.pkr.hcl"
 
 jobs:
   validate:
