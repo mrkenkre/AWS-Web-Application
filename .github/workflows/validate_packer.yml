@@ -5,9 +5,6 @@ on:
     branches:
       - dev
       - main
-    paths:
-      - 'packer_templates\aws_template.pkr.hcl'
-
 jobs:
   validate:
     runs-on: ubuntu-latest
@@ -24,14 +21,11 @@ jobs:
           packer --version
         shell: bash
 
+      - name: Initialize Packer Plugins
+        run: packer init ./packer_templates/.
+
       - name: Validate Packer Template
-        run: packer validate packer_templates/aws_template.json
+        run: packer validate ./packer_templates/.
 
       - name: Format Packer Template
-        run: |
-          packer fmt -check=true packer_templates/aws_template.json || exit 1
-        continue-on-error: true
-
-      - name: Check for Changes
-        run: |
-          git diff --exit-code || exit 1
+        run: packer fmt ./packer_templates/.
