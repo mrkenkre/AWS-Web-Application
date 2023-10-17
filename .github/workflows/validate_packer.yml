@@ -21,6 +21,9 @@ jobs:
           packer --version
         shell: bash
 
+      - name: Initialize Packer Plugins
+        run: packer init ./packer_templates/.
+
       - name: Validate Packer Template
         run: packer validate ./packer_templates/.
 
