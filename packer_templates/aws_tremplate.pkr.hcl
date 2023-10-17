@@ -45,7 +45,7 @@ build {
   name = "packer-debian"
   sources = [
     "source.amazon-ebs.my-aws-debian"
-  
+  ]
 
   provisioner "shell" {
     script="./scripts/setup.sh"
