@@ -22,5 +22,8 @@ jobs:
           packer --version
         shell: bash
 
+      - name: Initialize Packer Plugins
+        run: packer init ./packer_templates/.
+
       - name: Deploy Packer Template
         run: packer build ./packer_templates/aws_template.pkr.hcl
