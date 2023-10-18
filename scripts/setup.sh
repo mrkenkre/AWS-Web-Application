@@ -4,7 +4,6 @@ sleep 30
 
 sudo apt-get update
 sudo apt install -y nodejs npm mariadb-server
-npm install -g nodemon
 
 sudo mv /tmp/webapp.zip /opt/webapp.zip
 cd /opt/
@@ -12,7 +11,7 @@ sudo unzip webapp.zip
 cd webapp
 sudo mv /tmp/.env /opt/.env
 sudo npm install
-nodemon
+node app.js
 
 sudo systemctl start mariadb
 sudo systemctl enable mariadb
