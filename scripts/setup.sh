@@ -22,6 +22,8 @@ node app.js
 sudo systemctl start mariadb
 sudo systemctl enable mariadb
 
+sudo echo "$(cat .env)"
+
 sudo mysql -u root <<EOF
 CREATE USER '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASS';
 CREATE DATABASE '$DB_NAME';
