@@ -42,6 +42,7 @@ source "amazon-ebs" "my-aws-debian" {
   region        = "us-east-1"
   profile       = "devuser"
   subnet_id     = "subnet-0d9d8e0d99fe0610c"
+  ami_users     = ["781104868468", "407671753120"]
   source_ami_filter {
     filters = {
       name                = "debian-12-amd64*"
@@ -67,7 +68,7 @@ build {
     "source.amazon-ebs.my-aws-debian"
   ]
 
-   provisioner "file" {
+  provisioner "file" {
     source      = "./webapp.zip"
     destination = "/tmp/webapp.zip"
   }
