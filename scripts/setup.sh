@@ -14,6 +14,8 @@ echo "opt contents: "
 sudo ls -lrt
 sudo unzip webapp.zip
 sudo mv /tmp/.env /opt/.env
+echo "opt contents after zip: "
+sudo ls -lrt
 sudo npm install
 node app.js
 
