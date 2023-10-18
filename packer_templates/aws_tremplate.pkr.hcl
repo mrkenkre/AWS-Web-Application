@@ -12,6 +12,21 @@ variable "ami_prefix" {
   default = "my-packer-aws-debian"
 }
 
+variable "db_name" {
+  type    = string
+  default = ""
+}
+
+variable "db_user" {
+  type    = string
+  default = ""
+}
+
+variable "db_pass" {
+  type    = string
+  default = ""
+}
+
 locals {
   timestamp = regex_replace(timestamp(), "[- TZ:]", "")
 }
@@ -32,12 +47,12 @@ source "amazon-ebs" "my-aws-debian" {
     owners      = ["amazon"]
   }
   ssh_username = "admin"
-  launch_block_device_mappings{
-    device_name = "/dev/xvda"
-    volume_size = 25
-    volume_type = "gp2"
-    encrypted= true
-    delete_on_termination = true 
+  launch_block_device_mappings {
+    device_name           = "/dev/xvda"
+    volume_size           = 25
+    volume_type           = "gp2"
+    encrypted             = true
+    delete_on_termination = true
   }
 }
 
@@ -48,6 +63,27 @@ build {
   ]
 
   provisioner "shell" {
-    script="./scripts/setup.sh"
+
+    environment_vars = [
+      "DEBIAN_FRONTEND=noninteractive",
+      "CHECKPOINT_DISABLE=1",
+      "DB_USER=${var.db_user}",
+      "DB_NAME=${var.db_name}",
+      "DB_PASS=${var.db_pass}"
+    ]
+
+    script = "./scripts/setup.sh"
   }
+
+  provisioner "file" {
+    source      = "webapp.zip"
+    destination = "/tmp/webapp.zip"
+  }
+
+  provisioner "file" {
+    source      = ".env"
+    destination = "/tmp/.env"
+  }
+
 }
+
