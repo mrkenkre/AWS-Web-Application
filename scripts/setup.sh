@@ -24,6 +24,10 @@ sudo systemctl enable mariadb
 
 sudo echo "$(cat .env)"
 
+sudo echo "DB_USER: $DB_USER"
+sudo echo "DB_PASS: $DB_PASS"
+sudo echo "DB_NAME: $DB_NAME"
+
 sudo mysql -u root <<EOF
 CREATE USER '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASS';
 CREATE DATABASE '$DB_NAME';
