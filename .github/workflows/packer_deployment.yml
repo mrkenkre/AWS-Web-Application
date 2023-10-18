@@ -46,3 +46,4 @@ jobs:
 
       - name: Deploy Packer Template
         run: packer build -var "db_user=${{ secrets.WEBAPP_DB_USER}}" -var "db_name=${{ secrets.DB_NAME }}" -var "db_pass=${{ secrets.DB_PASSWORD }}" -var "environment_file=./.env" ./packer_templates/.
+
