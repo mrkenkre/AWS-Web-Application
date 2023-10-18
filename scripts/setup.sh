@@ -6,11 +6,14 @@ sleep 30
 sudo apt install -y nodejs npm mariadb-server unzip
 
 cd /tmp
+echo "Contents of current path:"
 ls
 sudo mv /tmp/webapp.zip /opt/webapp.zip
 cd /opt/
+echo "Contents of current path:"
 ls
 sudo unzip webapp.zip
+echo "Contents of current path:"
 ls
 cd webapp
 sudo mv /tmp/.env /opt/.env
