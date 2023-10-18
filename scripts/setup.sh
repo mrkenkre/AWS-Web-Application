@@ -11,8 +11,7 @@ sudo mv /tmp/.env /opt/.env
 cd /opt/
 sudo unzip webapp.zip
 cd webapp
-npm install
-nodemon
+sudo npm install
 
 sudo systemctl start mariadb
 sudo systemctl enable mariadb
