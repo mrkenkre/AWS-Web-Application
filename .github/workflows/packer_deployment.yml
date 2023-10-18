@@ -24,7 +24,7 @@ jobs:
 
       - name: Initialize Packer Plugins
         run: packer init ./packer_templates/.
-
+        
       - name: Create an .env file
         run: |
           touch .env
