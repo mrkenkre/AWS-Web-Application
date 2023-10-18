@@ -31,8 +31,8 @@ jobs:
           echo DB_NAME=${{ secrets.DB_NAME }} >> .env
           echo DB_USER=${{ secrets.WEBAPP_DB_USER}} >> .env
           echo DB_PASS=${{ secrets.DB_PASSWORD }} >> .env
-          echo DB_PASS=${{ secrets.DB_HOST }} >> .env
-          echo DB_PASS=${{ secrets.DB_DIALECT }} >> .env
+          echo DB_HOST=${{ secrets.DB_HOST }} >> .env
+          echo DB_DIALECT=${{ secrets.DB_DIALECT }} >> .env
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
