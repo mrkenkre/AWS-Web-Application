@@ -25,5 +25,24 @@ jobs:
       - name: Initialize Packer Plugins
         run: packer init ./packer_templates/.
 
+      - name: Create an .env file
+        run: |
+          touch .env
+          echo DB_NAME=${{ secrets.DB_NAME }} >> .env
+          echo DB_USER=${{ secrets.WEBAPP_DB_USER}} >> .env
+          echo DB_PASS=${{ secrets.DB_PASSWORD }} >> .env
+          echo DB_PASS=${{ secrets.DB_HOST }} >> .env
+          echo DB_PASS=${{ secrets.DB_DIALECT }} >> .env
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION}}
+
+      - name: Zip Project Files
+        run: zip -r webapp.zip ./*
+
       - name: Deploy Packer Template
-        run: packer build ./packer_templates/.
+        run: packer build -var "db_user=${{ secrets.WEBAPP_DB_USER}}" -var "db_name=${{ secrets.DB_NAME }}" -var "db_pass=${{ secrets.DB_PASSWORD }}" -var "environment_file=.env" ./packer_templates/.
