@@ -17,7 +17,6 @@ sudo mv /tmp/.env /opt/.env
 echo "opt contents after zip: "
 sudo ls -lrt
 sudo npm install
-node app.js
 
 sudo systemctl start mariadb
 sudo systemctl enable mariadb
@@ -35,3 +34,6 @@ GRANT ALL PRIVILEGES ON '$DB_NAME'. TO '$DB_USER'@'localhost' IDENTIFIED BY '$DB
 FLUSH PRIVILEGES;
 EOF
 } || echo "MySQL command failed"
+
+
+node app.js
