@@ -24,6 +24,12 @@ jobs:
       - name: Initialize Packer Plugins
         run: packer init ./packer_templates/.
 
+      - name: Zip Project Files
+        run: zip -r webapp.zip ./
+
+      - name: Create .env file
+        run: touch .env
+
       - name: Validate Packer Template
         run: packer validate -syntax-only ./packer_templates/.
 
