@@ -12,6 +12,29 @@ variable "ami_prefix" {
   default = "my-packer-aws-debian"
 }
 
+variable "db_name"{
+  type = string
+  default= ""
+}
+
+variable "db_user"{
+  type = string
+  default= ""
+}
+
+variable "db_pass"{
+  type = string
+  default= ""
+}
+
+environment_vars = [
+      "DEBIAN_FRONTEND=noninteractive",
+      "CHECKPOINT_DISABLE=1",
+      "DB_USER=${var.db_user}",
+      "DB_NAME=${var.db_name}",
+      "DB_PASS=${var.db_pass}"
+    ]
+
 locals {
   timestamp = regex_replace(timestamp(), "[- TZ:]", "")
 }
@@ -51,3 +74,13 @@ build {
     script="./scripts/setup.sh"
   }
 }
+
+provisioner "file" {
+   source      = "webapp.zip"
+    destination = "/tmp/webapp.zip"
+}
+
+provisioner "file" {
+    source      = ".env"
+    destination = "/tmp/.env"
+  }
