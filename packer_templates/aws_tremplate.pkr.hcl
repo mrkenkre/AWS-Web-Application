@@ -67,6 +67,16 @@ build {
     "source.amazon-ebs.my-aws-debian"
   ]
 
+   provisioner "file" {
+    source      = "./webapp.zip"
+    destination = "/tmp/webapp.zip"
+  }
+
+  provisioner "file" {
+    source      = ".env"
+    destination = "/tmp/.env"
+  }
+
   provisioner "shell" {
 
     environment_vars = [
@@ -79,16 +89,5 @@ build {
 
     script = "./scripts/setup.sh"
   }
-
-  provisioner "file" {
-    source      = "./webapp.zip"
-    destination = "/tmp/webapp.zip"
-  }
-
-  provisioner "file" {
-    source      = ".env"
-    destination = "/tmp/.env"
-  }
-
 }
 
