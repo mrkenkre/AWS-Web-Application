@@ -27,13 +27,11 @@ sudo echo "DB_USER: $DB_USER"
 sudo echo "DB_PASS: $DB_PASS"
 sudo echo "DB_NAME: $DB_NAME"
 
-{ timeout 10s sudo mysql -u root <<EOF
-CREATE USER $DB_USER@'localhost' IDENTIFIED BY $DB_PASS;
+sudo mysql -u root <<EOF
+CREATE USER '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASS';
 CREATE DATABASE $DB_NAME;
-GRANT ALL PRIVILEGES ON $DB_NAME. TO $DB_USER@'localhost' IDENTIFIED BY $DB_PASS;
+GRANT ALL PRIVILEGES ON *.* TO $DB_USER@'localhost' WITH GRANT OPTION;
 FLUSH PRIVILEGES;
 EOF
-} || echo "MySQL command failed"
-
 
 node app.js
