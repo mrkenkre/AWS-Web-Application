@@ -6,8 +6,12 @@ sudo apt-get update
 sudo apt install -y nodejs npm mariadb-server zip unzip
 
 cd /tmp
+echo "tmp contents: "
 sudo ls -lrt
 sudo mv /tmp/webapp.zip /opt/webapp.zip
+cd /opt
+echo "opt contents: "
+sudo ls -lrt
 sudo unzip webapp.zip
 sudo mv /tmp/.env /opt/.env
 sudo npm install
