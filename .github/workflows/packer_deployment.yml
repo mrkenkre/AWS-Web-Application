@@ -25,9 +25,8 @@ jobs:
       - name: Initialize Packer Plugins
         run: packer init ./packer_templates/.
 
-      - name: Create an .env file
+      - name: Edit .env file
         run: |
-          touch .env
           echo DB_NAME=${{ secrets.DB_NAME }} >> .env
           echo DB_USER=${{ secrets.WEBAPP_DB_USER}} >> .env
           echo DB_PASS=${{ secrets.DB_PASSWORD }} >> .env
@@ -40,9 +39,6 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION}}
-
-      - name: Zip Project Files
-        run: zip -r webapp.zip ./
 
       - name: List files in the repository
         run: |
