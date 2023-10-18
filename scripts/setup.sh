@@ -12,7 +12,6 @@ cd /opt/
 sudo unzip webapp.zip
 cd webapp
 sudo npm install
-nodemon
 
 sudo systemctl start mariadb
 sudo systemctl enable mariadb
