@@ -2,12 +2,16 @@
 
 sleep 30
 
-sudo apt-get update
+#sudo apt-get update
 sudo apt install -y nodejs npm mariadb-server unzip
 
+cd /tmp
+ls
 sudo mv /tmp/webapp.zip /opt/webapp.zip
 cd /opt/
+ls
 sudo unzip webapp.zip
+ls
 cd webapp
 sudo mv /tmp/.env /opt/.env
 sudo npm install
