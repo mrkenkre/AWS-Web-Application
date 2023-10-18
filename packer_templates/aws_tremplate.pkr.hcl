@@ -27,6 +27,11 @@ variable "db_pass" {
   default = ""
 }
 
+# variable "environment_file" {
+#   type    = string
+#   default = ""
+# }
+
 locals {
   timestamp = regex_replace(timestamp(), "[- TZ:]", "")
 }
