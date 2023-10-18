@@ -44,5 +44,9 @@ jobs:
       - name: Zip Project Files
         run: zip -r webapp.zip ./
 
+      - name: List files in the repository
+        run: |
+          ls ${{ github.workspace }}
+
       - name: Deploy Packer Template
         run: packer build -var "db_user=${{ secrets.WEBAPP_DB_USER}}" -var "db_name=${{ secrets.DB_NAME }}" -var "db_pass=${{ secrets.DB_PASSWORD }}" ./packer_templates/.
