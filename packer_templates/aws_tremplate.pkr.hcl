@@ -32,10 +32,18 @@ variable "aws_region" {
   default = "us-east-1"
 }
 
-# variable "environment_file" {
-#   type    = string
-#   default = ""
-# }
+variable "instance_type" {
+  type    = string
+  default = "t2.micro"
+}
+variable "aws_profile" {
+  type    = string
+  default = "devuser"
+}
+variable "subnet_Id" {
+  type    = string
+  default = "subnet-0d9d8e0d99fe0610c"
+}
 
 locals {
   timestamp = regex_replace(timestamp(), "[- TZ:]", "")
@@ -43,11 +51,11 @@ locals {
 
 source "amazon-ebs" "my-aws-debian" {
   ami_name      = "${var.ami_prefix}-${local.timestamp}"
-  instance_type = "t2.micro"
-  region        = "us-east-1"
-  profile       = "devuser"
+  instance_type = "${instance_type}"
+  region        = "${aws_region}"
+  profile       = "${aws_profile}"
   ami_users     = ["781104868468", "407671753120"]
-  subnet_id="subnet-0d9d8e0d99fe0610c"
+  subnet_id="${subnet_Id}"
   ami_regions = [
     "us-east-1",
   ]

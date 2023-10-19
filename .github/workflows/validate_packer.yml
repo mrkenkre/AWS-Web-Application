@@ -31,7 +31,7 @@ jobs:
         run: touch .env
 
       - name: Validate Packer Template
-        run: packer validate -syntax-only ./packer_templates/.
+        run: packer validate ./packer_templates/.
 
       - name: Format Packer Template
         run: packer fmt ./packer_templates/.
