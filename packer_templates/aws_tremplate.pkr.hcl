@@ -45,6 +45,52 @@ variable "subnet_Id" {
   default = "subnet-0d9d8e0d99fe0610c"
 }
 
+variable "device_name" {
+  type    = string
+  default = "/dev/xvda"
+}
+
+variable "volume_size" {
+  type    = number
+  default = 25
+}
+
+variable "volume_type" {
+  type    = string
+  default = "gp2"
+}
+
+
+variable "ami_users" {
+  type    = list(string)
+  default = ["781104868468", "407671753120"]
+}
+
+variable "ssh_username" {
+  type    = string
+  default = "admin"
+}
+
+variable "ami_filter_name" {
+  type    = string
+  default = "debian-12-amd64*"
+}
+
+variable "ami_filter_root_device_type" {
+  type    = string
+  default = "ebs"
+}
+
+variable "ami_filter_virtualization_type" {
+  type    = string
+  default = "hvm"
+}
+
+variable "ami_filter_owners" {
+  type    = list(string)
+  default = ["amazon"]
+}
+
 locals {
   timestamp = regex_replace(timestamp(), "[- TZ:]", "")
 }
@@ -54,25 +100,25 @@ source "amazon-ebs" "my-aws-debian" {
   instance_type = "${var.instance_type}"
   region        = "${var.aws_region}"
   profile       = "${var.aws_profile}"
-  ami_users     = ["781104868468", "407671753120"]
-  subnet_id="${var.subnet_Id}"
+  ami_users     = var.ami_users
+  subnet_id     = "${var.subnet_Id}"
   ami_regions = [
-    "us-east-1",
+    "${var.aws_region}"
   ]
   source_ami_filter {
     filters = {
-      name                = "debian-12-amd64*"
-      root-device-type    = "ebs"
-      virtualization-type = "hvm"
+      name                = "${var.ami_filter_name}"
+      root-device-type    = "${var.ami_filter_root_device_type}"
+      virtualization-type = "${var.ami_filter_virtualization_type}"
     }
     most_recent = true
-    owners      = ["amazon"]
+    owners      = var.ami_filter_owners
   }
-  ssh_username = "admin"
+  ssh_username = "${var.ssh_username}"
   launch_block_device_mappings {
-    device_name           = "/dev/xvda"
-    volume_size           = 25
-    volume_type           = "gp2"
+    device_name           = "${var.device_name}"
+    volume_size           = "${var.volume_size}"
+    volume_type           = "${var.volume_type}"
     delete_on_termination = true
   }
 }

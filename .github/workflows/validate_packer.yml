@@ -6,7 +6,7 @@ on:
       - dev
       - main
 jobs:
-  validate:
+  validate-packer:
     runs-on: ubuntu-latest
 
     steps:
@@ -25,13 +25,16 @@ jobs:
         run: packer init ./packer_templates/.
 
       - name: Zip Project Files
-        run: zip -r webapp.zip ./
+        run: zip -r webapp.zip . --exclude=*.git*
 
       - name: Create .env file
         run: touch .env
 
+      - name: Format Packer Template
+        run: |
+          packer fmt ./packer_templates/.
+          git diff --exit-code --quiet || (echo "Packer template formatting modified the file." && exit 1)
+        working-directory: ${{ github.workspace }}
+
       - name: Validate Packer Template
         run: packer validate ./packer_templates/.
-
-      - name: Format Packer Template
-        run: packer fmt ./packer_templates/.
