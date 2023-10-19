@@ -37,8 +37,6 @@ variable "aws_region" {
 #   default = ""
 # }
 
-
-
 locals {
   timestamp = regex_replace(timestamp(), "[- TZ:]", "")
 }
@@ -49,6 +47,7 @@ source "amazon-ebs" "my-aws-debian" {
   region        = "us-east-1"
   profile       = "devuser"
   ami_users     = ["781104868468", "407671753120"]
+  subnet_id="subnet-0d9d8e0d99fe0610c"
   ami_regions = [
     "us-east-1",
   ]
