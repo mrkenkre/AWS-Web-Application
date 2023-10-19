@@ -51,11 +51,11 @@ locals {
 
 source "amazon-ebs" "my-aws-debian" {
   ami_name      = "${var.ami_prefix}-${local.timestamp}"
-  instance_type = "${instance_type}"
-  region        = "${aws_region}"
-  profile       = "${aws_profile}"
+  instance_type = "${var.instance_type}"
+  region        = "${var.aws_region}"
+  profile       = "${var.aws_profile}"
   ami_users     = ["781104868468", "407671753120"]
-  subnet_id="${subnet_Id}"
+  subnet_id="${var.subnet_Id}"
   ami_regions = [
     "us-east-1",
   ]
@@ -102,7 +102,6 @@ build {
       "DB_NAME=${var.db_name}",
       "DB_PASS=${var.db_pass}"
     ]
-
     script = "./scripts/setup.sh"
   }
 }
