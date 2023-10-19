@@ -44,6 +44,7 @@ variable "subnet_Id" {
   type    = string
   default = "subnet-0d9d8e0d99fe0610c"
 }
+
 variable "device_name" {
   type    = string
   default = "/dev/xvda"
