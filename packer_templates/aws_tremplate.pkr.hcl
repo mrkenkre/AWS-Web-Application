@@ -44,6 +44,7 @@ variable "subnet_Id" {
   type    = string
   default = "subnet-0d9d8e0d99fe0610c"
 }
+
 variable "device_name" {
   type    = string
   default = "/dev/xvda"
@@ -58,7 +59,6 @@ variable "volume_type" {
   type    = string
   default = "gp2"
 }
-
 
 variable "ami_users" {
   type    = list(string)
@@ -93,7 +93,6 @@ variable "ami_filter_owners" {
 locals {
   timestamp = regex_replace(timestamp(), "[- TZ:]", "")
 }
-
 
 source "amazon-ebs" "my-aws-debian" {
   ami_name      = "${var.ami_prefix}-${local.timestamp}"
