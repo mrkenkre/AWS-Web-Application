@@ -7,7 +7,7 @@ on:
       - dev
 
 jobs:
-  connect-remote:
+  validate-mysql:
     runs-on: ubuntu-latest
 
     services:
