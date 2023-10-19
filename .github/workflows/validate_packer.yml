@@ -32,8 +32,8 @@ jobs:
 
       - name: Format Packer Template
         run: |
-          git diff --exit-code --quiet || (echo "Packer template formatting modified the file." && exit 1)
           packer fmt ./packer_templates/.
+          git diff --exit-code --quiet || (echo "Packer template formatting modified the file." && exit 1)
         working-directory: ${{ github.workspace }}
 
       - name: Validate Packer Template
