@@ -50,12 +50,12 @@ locals {
 }
 
 source "amazon-ebs" "my-aws-debian" {
-  ami_name      = "${var.ami_prefix}-${local.timestamp}"
+  ami_name      =             "${var.ami_prefix}-${local.timestamp}"
   instance_type = "${var.instance_type}"
   region        = "${var.aws_region}"
   profile       = "${var.aws_profile}"
   ami_users     = ["781104868468", "407671753120"]
-  subnet_id="${var.subnet_Id}"
+  subnet_id     = "${var.subnet_Id}"
   ami_regions = [
     "us-east-1",
   ]
