@@ -41,7 +41,6 @@ source "amazon-ebs" "my-aws-debian" {
   instance_type = "t2.micro"
   region        = "us-east-1"
   profile       = "devuser"
-  subnet_id     = "subnet-0d9d8e0d99fe0610c"
   ami_users     = ["781104868468", "407671753120"]
   source_ami_filter {
     filters = {
