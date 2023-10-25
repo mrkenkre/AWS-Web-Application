@@ -15,7 +15,7 @@ async function authenticate(req, res) {
   //   }
 
   if (!req.headers.authorization) {
-    res.status(403).send("Unauthorized: Please pass valid credentials.");
+    res.status(401).send("Unauthorized: Please pass valid credentials.");
     return false;
   }
 
@@ -42,7 +42,7 @@ async function authenticate(req, res) {
       const passwordMatch = await bcrypt.compare(password, user.password);
 
       if (passwordMatch) {
-        //console.log("herrrrr: " + user.id);
+        //console.log("here: " + user.id);
         req.user = user;
         return true;
       } else {
