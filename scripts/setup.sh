@@ -17,7 +17,7 @@ sudo chown -R csye6225:csye6225 /opt/csye6225
 sudo npm install
 
 sudo cp csye6225.service /etc/systemd/system
-systemctl daemon-reload
+sudo systemctl daemon-reloaddev
 sudo systemctl enable csye6225
 sudo systemctl start csye6225
 sudo systemctl restart csye6225
