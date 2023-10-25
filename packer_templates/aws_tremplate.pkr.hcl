@@ -51,7 +51,7 @@ variable "device_name" {
 variable "volume_size" {
   type    = number
   default = 25
-
+}
 variable "volume_type" {
   type    = string
   default = "gp2"
