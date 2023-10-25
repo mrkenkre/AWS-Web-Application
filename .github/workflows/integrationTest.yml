@@ -6,6 +6,11 @@ on:
       - main
       - dev
 
+  push:
+    branches:
+      - dev
+      - main
+
 jobs:
   validate-mysql:
     runs-on: ubuntu-latest

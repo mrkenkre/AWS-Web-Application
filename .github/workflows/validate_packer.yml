@@ -31,10 +31,7 @@ jobs:
         run: touch .env
 
       - name: Format Packer Template
-        run: |
-          packer fmt ./packer_templates/.
-          git diff --exit-code --quiet || (echo "Packer template formatting modified the file." && exit 1)
-        working-directory: ${{ github.workspace }}
+        run: packer fmt -check ./packer_templates/.
 
       - name: Validate Packer Template
         run: packer validate ./packer_templates/.
