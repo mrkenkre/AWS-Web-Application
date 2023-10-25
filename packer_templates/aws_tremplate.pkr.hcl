@@ -13,7 +13,7 @@ variable "ami_prefix" {
 }
 
 variable "db_name" {
-  type    = string
+  type    =             string
   default = ""
 }
 
