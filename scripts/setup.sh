@@ -13,6 +13,7 @@ sudo mv /tmp/webapp.zip /opt/csye6225/webapp.zip
 cd /opt/csye6225
 sudo unzip webapp.zip
 sudo chown -R csye6225:csye6225 /opt/csye6225
+sudo chmod +x /opt/csye6225/app.js
 
 sudo npm install
 

@@ -6,7 +6,7 @@ After=network.target
 [Service]
 User=csye6225
 Group=csye6225
-WorkingDirectory=/opt/csye6225/app.js
+WorkingDirectory=/opt/csye6225/
 ExecStart=/opt/csye6225/app.js
 Restart=always
 RestartSec=5
