@@ -12,21 +12,6 @@ variable "ami_prefix" {
   default = "my-packer-aws-debian"
 }
 
-variable "db_name" {
-  type    = string
-  default = ""
-}
-
-variable "db_user" {
-  type    = string
-  default = ""
-}
-
-variable "db_pass" {
-  type    = string
-  default = ""
-}
-
 variable "aws_region" {
   type    = string
   default = "us-east-1"
@@ -131,8 +116,8 @@ build {
   }
 
   provisioner "file" {
-    source      = ".env"
-    destination = "/tmp/.env"
+    source      = "./csye6225.service"
+    destination = "/tmp/csye6225.service"
   }
 
   provisioner "shell" {
@@ -140,9 +125,6 @@ build {
     environment_vars = [
       "DEBIAN_FRONTEND=noninteractive",
       "CHECKPOINT_DISABLE=1",
-      "DB_USER=${var.db_user}",
-      "DB_NAME=${var.db_name}",
-      "DB_PASS=${var.db_pass}"
     ]
     script = "./scripts/setup.sh"
   }
