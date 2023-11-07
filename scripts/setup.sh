@@ -18,6 +18,7 @@ sudo npm install
 sudo wget https://s3.amazonaws.com/amazoncloudwatch-agent/debian/amd64/latest/amazon-cloudwatch-agent.deb
 sudo dpkg -i -E amazon-cloudwatch-agent.deb
 sudo touch /opt/aws/amazon-cloudwatch-agent/cloudwatch-config.json
+sudo chmod 755 /opt/aws/amazon-cloudwatch-agent/cloudwatch-config.json
 
 cd /opt/aws/amazon-cloudwatch-agent/
 sudo echo '{
@@ -67,8 +68,8 @@ cd /opt/csye6225
 sudo cp csye6225.service /etc/systemd/system
 sudo systemctl daemon-reload
 
-systemctl enable amazon-cloudwatch-agent
-systemctl start amazon-cloudwatch-agent
+sudo systemctl enable amazon-cloudwatch-agent
+sudo systemctl start amazon-cloudwatch-agent
 
 sudo systemctl enable csye6225
 sudo systemctl start csye6225
