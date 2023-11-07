@@ -17,7 +17,8 @@
     "lodash": "^4.17.21",
     "mariadb": "^2.5.4",
     "sequelize": "^6.33.0",
-    "sequelize-cli": "^6.6.1"
+    "sequelize-cli": "^6.6.1",
+    "winston": "^3.11.0"
   },
   "devDependencies": {
     "chai": "^4.3.10",

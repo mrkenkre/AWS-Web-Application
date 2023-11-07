@@ -2,10 +2,20 @@ const sequelize = require("./sequelize");
 const fs = require("fs");
 const csvparser = require("csv-parser");
 const Account = require("../models/account");
+const {
+  standardOutputLogger,
+  standardErrorLogger,
+} = require("../utils/logger");
 // const createDatabase = require("./dbCreate");
 
 async function configureDatabase() {
   try {
+    standardOutputLogger.info(
+      "This is an informational message from configureDatabase()."
+    );
+    standardErrorLogger.error(
+      "This is an error message from configureDatabase()."
+    );
     let isDatabaseSynced = false;
     await sequelize
       .sync({

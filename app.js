@@ -4,8 +4,10 @@ const bodyParser = require("body-parser");
 const healthz = require("./routes/healthcheck");
 const assg = require("./routes/assg");
 const configureDatabase = require("./config/dbConfig");
-
+const { standardOutputLogger, standardErrorLogger } = require("./utils/logger");
 const app = express();
+standardOutputLogger.info("This is an informational message from app.");
+standardErrorLogger.error("This is an error message from app.");
 configureDatabase();
 
 app.use(bodyParser.json());
