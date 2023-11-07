@@ -18,10 +18,10 @@ sudo npm install
 sudo wget https://s3.amazonaws.com/amazoncloudwatch-agent/debian/amd64/latest/amazon-cloudwatch-agent.deb
 sudo dpkg -i -E amazon-cloudwatch-agent.deb
 sudo touch /opt/aws/amazon-cloudwatch-agent/cloudwatch-config.json
-sudo chmod 755 /opt/aws/amazon-cloudwatch-agent/cloudwatch-config.json
+sudo chmod 644 /opt/aws/amazon-cloudwatch-agent/cloudwatch-config.json
 
 cd /opt/aws/amazon-cloudwatch-agent/
-sudo echo '{
+sudo sh -c 'echo "{
   "agent": {
       "metrics_collection_interval": 10,
       "logfile": "/var/logs/amazon-cloudwatch-agent.log"
@@ -59,7 +59,7 @@ sudo echo '{
        }
     }
   }
-}' > cloudwatch-config.json
+}" > cloudwatch-config.json'
 
 sudo chown -R csye6225:csye6225 /opt
 sudo chmod +x /opt/csye6225/app.js
