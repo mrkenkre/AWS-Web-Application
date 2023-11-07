@@ -61,7 +61,6 @@ sudo sh -c "echo '{
   }
 }' > cloudwatch-config.json"
 
-
 sudo chown -R csye6225:csye6225 /opt
 sudo chmod +x /opt/csye6225/app.js
 
