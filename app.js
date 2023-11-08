@@ -6,8 +6,7 @@ const assg = require("./routes/assg");
 const configureDatabase = require("./config/dbConfig");
 const { standardOutputLogger, standardErrorLogger } = require("./utils/logger");
 const app = express();
-standardOutputLogger.info("This is an informational message from app.");
-standardErrorLogger.error("This is an error message from app.");
+standardOutputLogger.info("Initialising Webapp.");
 configureDatabase();
 
 app.use(bodyParser.json());
@@ -19,6 +18,7 @@ app.use("/v1", assg);
 
 app.listen("3000", () => {
   console.log("Server started on port 3000.");
+  standardOutputLogger.info("Server started on port 3000.");
 });
 
 module.exports = app;

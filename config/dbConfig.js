@@ -10,12 +10,6 @@ const {
 
 async function configureDatabase() {
   try {
-    standardOutputLogger.info(
-      "This is an informational message from configureDatabase()."
-    );
-    standardErrorLogger.error(
-      "This is an error message from configureDatabase()."
-    );
     let isDatabaseSynced = false;
     await sequelize
       .sync({
@@ -26,7 +20,7 @@ async function configureDatabase() {
       })
       .then((isDatabaseSynced = true));
     console.log("Database sync completed successfully.");
-
+    standardOutputLogger.info("Database sync completed successfully.");
     try {
       if (isDatabaseSynced) {
         const csvPath = "./resources/users.csv";
@@ -39,13 +33,13 @@ async function configureDatabase() {
                 where: { email: row.email },
                 defaults: row,
               });
-              // if (created) {
-              //     console.log(`User with email ${row.email} inserted.`);
-              // } else {
-              //     console.log(`User with email ${row.email} already exists.`);
-              // }
             } catch (error) {
               console.error(
+                `Error while processing row with email ${row.email}:\n`,
+                error
+              );
+
+              standardErrorLogger.error(
                 `Error while processing row with email ${row.email}:\n`,
                 error
               );
@@ -53,12 +47,15 @@ async function configureDatabase() {
           })
           .on("end", () => {
             console.log("CSV processing completed.");
+            standardOutputLogger.info("CSV processing completed.");
           });
       }
       // isDatabaseSynced = true;
       console.log("Users added successfully.");
+      standardOutputLogger.info("Users added successfully.");
     } catch (error) {
       console.error("Error while adding users:\n", error);
+      standardErrorLogger.error("Error while adding users:\n", error);
     }
 
     // Close the connection
@@ -66,6 +63,7 @@ async function configureDatabase() {
     // console.log("Connection closed.");
   } catch (error) {
     console.error("Error while syncing database:\n", error);
+    standardErrorLogger.error("Error while syncing database:\n", error);
   }
 }
 

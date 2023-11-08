@@ -1,7 +1,9 @@
 const Account = require("../models/account");
-const db = require("../models/index");
 const bcrypt = require("bcrypt");
-
+const {
+  standardOutputLogger,
+  standardErrorLogger,
+} = require("../utils/logger");
 //let user = null;
 
 async function authenticate(req, res) {
@@ -15,6 +17,7 @@ async function authenticate(req, res) {
   //   }
 
   if (!req.headers.authorization) {
+    standardErrorLogger.error("Unauthorized: Invalid credentials.");
     res.status(401).send("Unauthorized: Please pass valid credentials.");
     return false;
   }
@@ -28,13 +31,17 @@ async function authenticate(req, res) {
   console.log("Username:", username);
   console.log("Password:", password);
   if (!username || !password) {
-    res.status(401).send("Unauthorized: Username or password is blank.");
+    standardErrorLogger.error(
+      "Unauthorized: Username or password cannot be null."
+    );
+    res.status(401).send("Unauthorized: Username or password cannot be null.");
     return false;
   } else {
     try {
       user = await Account.findOne({ where: { email: username } });
 
       if (!user) {
+        standardErrorLogger.error("Unauthorized: User not found.");
         res.status(401).send("Unauthorized: User not found.");
         return false;
       }
@@ -46,10 +53,12 @@ async function authenticate(req, res) {
         req.user = user;
         return true;
       } else {
+        standardErrorLogger.error("Unauthorized: Password is incorrect.");
         res.status(401).send("Unauthorized: Password is incorrect.");
         return false;
       }
     } catch (error) {
+      standardErrorLogger.error("Authentication error:", error);
       console.error("Authentication error:", error);
       return false;
     }
