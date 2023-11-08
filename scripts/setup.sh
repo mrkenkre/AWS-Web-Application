@@ -33,18 +33,13 @@ sudo sh -c "echo '{
                   {
                       \"file_path\": \"/var/log/csye6225_stdop.log\",
                       \"log_group_name\": \"csye6225\",
-                      \"log_stream_name\": \"webapp\"
+                      \"log_stream_name\": \"webapp-stdoutput\"
                   },
                    {
                       \"file_path\": \"/var/log/csye6225_error.log\",
                       \"log_group_name\": \"csye6225\",
-                      \"log_stream_name\": \"webapp\"
+                      \"log_stream_name\": \"webapp-error\"
                   },
-                   {
-                      \"file_path\": \"/var/log/auth.log\",
-                      \"log_group_name\": \"ec2-security\",
-                      \"log_stream_name\": \"audit-log\"
-                  }
               ]
           }
       },
