@@ -3,8 +3,10 @@ const {
   standardOutputLogger,
   standardErrorLogger,
 } = require("../utils/logger");
+const client = require("../utils/statsdutil");
 
 async function healthz(req, res) {
+  client.increment("API.healthz.GET");
   try {
     res.set("Cache-Control", "no-cache");
     if (req.method !== "GET") {
