@@ -34,7 +34,6 @@ const Account = sequelize.define(
       },
       set(value) {
         const hashedPassword = bcrypt.hashSync(value, 10);
-        console.log("Hasssssh: " + hashedPassword);
         this.setDataValue("password", hashedPassword);
       },
     },
