@@ -33,13 +33,13 @@ sudo sh -c "echo '{
                   {
                       \"file_path\": \"/var/log/csye6225_stdop.log\",
                       \"log_group_name\": \"csye6225\",
-                      \"log_stream_name\": \"webapp-stdoutput\"
+                      \"log_stream_name\": \"webapp\"
                   },
                    {
                       \"file_path\": \"/var/log/csye6225_error.log\",
                       \"log_group_name\": \"csye6225\",
-                      \"log_stream_name\": \"webapp-error\"
-                  },
+                      \"log_stream_name\": \"webapp\"
+                  }
               ]
           }
       },
