@@ -35,6 +35,7 @@ async function postassg(req, res) {
         });
 
         //await assignmentInstance.save();
+        standardOutputLogger.info("Assignment created.");
         res.status(201).json(assignmentInstance);
       } catch (error) {
         if (error.name === "SequelizeUniqueConstraintError") {
@@ -51,7 +52,9 @@ async function postassg(req, res) {
             field: err.path,
             message: err.message,
           }));
-          standardErrorLogger.error({ "Validation errors": validationErrors });
+          standardErrorLogger.error(
+            "Validation Errors:" + JSON.stringify(validationErrors)
+          );
           return res.status(400).json({ errors: validationErrors });
         }
 
@@ -203,9 +206,9 @@ async function putassg(req, res) {
                 field: err.path,
                 message: err.message,
               }));
-              standardErrorLogger.error({
-                "Validation errors": validationErrors,
-              });
+              standardErrorLogger.error(
+                "Validation Errors:" + JSON.stringify(validationErrors)
+              );
               return res.status(400).json({ errors: validationErrors });
             }
           }
