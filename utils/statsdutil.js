@@ -1,5 +1,6 @@
 const StatsD = require("node-statsd");
-const client = new StatsD({
+
+const client = new StatsD.StatsD({
   host: "localhost",
   port: 8125,
 });
