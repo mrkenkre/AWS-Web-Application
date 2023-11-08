@@ -1,12 +1,18 @@
 const sequelize = require("../config/sequelize");
+const {
+  standardOutputLogger,
+  standardErrorLogger,
+} = require("../utils/logger");
 
 async function healthz(req, res) {
   try {
     res.set("Cache-Control", "no-cache");
     if (req.method !== "GET") {
+      standardErrorLogger.error("Method Not Allowed");
       console.log("Method not allowed.");
       res.status(405).send();
     } else if (JSON.stringify(req.body).length > 2) {
+      standardErrorLogger.error("Request payload not allowed.");
       console.log("Request payload not allowed.");
       res.status(400).send();
     } else {
@@ -22,10 +28,12 @@ async function healthz(req, res) {
 
       await sequelize.authenticate();
       res.status(200).send();
+      standardOutputLogger.info("MySQL connected successfully.");
       console.log("MySQL connected successfully.");
     }
   } catch (error) {
     console.log("Unable to connect to the database: " + error);
+    standardErrorLogger.error("Unable to connect to the database: " + error);
     res.status(503).send();
   }
 }
