@@ -28,8 +28,8 @@ async function authenticate(req, res) {
     "utf-8"
   );
   const [username, password] = credentials.split(":");
-  console.log("Username:", username);
-  console.log("Password:", password);
+  // console.log("Username:", username);
+  // console.log("Password:", password);
   if (!username || !password) {
     standardErrorLogger.error(
       "Unauthorized: Username or password cannot be null."
