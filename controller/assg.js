@@ -8,10 +8,10 @@ const {
   standardOutputLogger,
   standardErrorLogger,
 } = require("../utils/logger");
+const client = require("../utils/statsdutil");
 
 async function postassg(req, res) {
-  //console.log("Stat: " + (await authenticate(req, res)));
-
+  client.increment("API.assignment.POST");
   if (JSON.stringify(req.body).length <= 2) {
     console.log("Please pass request body.");
     standardErrorLogger.error("Request body not found.");
@@ -72,6 +72,7 @@ async function postassg(req, res) {
 }
 
 async function getassg(req, res) {
+  client.increment("API.assignment.GET");
   if (JSON.stringify(req.body).length > 2) {
     console.log("Request payload not allowed.");
     standardErrorLogger.error("Request payload not allowed.");
@@ -100,6 +101,7 @@ async function getassg(req, res) {
 }
 
 async function getallassg(req, res) {
+  client.increment("API.assignment.GETAll");
   if (JSON.stringify(req.body).length > 2) {
     console.log("Request payload not allowed.");
     standardErrorLogger.error("Request payload not allowed.");
@@ -129,6 +131,7 @@ async function getallassg(req, res) {
 }
 
 async function putassg(req, res) {
+  client.increment("API.assignment.PUT");
   if (JSON.stringify(req.body).length <= 2) {
     console.log("Please pass request body.");
     standardErrorLogger.error("Request body not found.");
@@ -229,6 +232,7 @@ async function putassg(req, res) {
 }
 
 async function deleteassg(req, res) {
+  client.increment("API.assignment.DELETE");
   if (JSON.stringify(req.body).length > 2) {
     console.log("Request payload not allowed.");
     standardErrorLogger.error("Request payload not allowed.");
@@ -277,6 +281,7 @@ async function deleteassg(req, res) {
 }
 
 async function invalidassg(req, res) {
+  client.increment("API.assignment.Invalid");
   standardErrorLogger.error("Method Not Allowed");
   res.status(405).send("Method Not Allowed");
 }
