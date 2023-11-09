@@ -48,7 +48,7 @@ sudo sh -c "echo '{
   \"metrics\": {
     \"metrics_collected\": {
        \"statsd\": {
-          \"service_address\": \"8125\",
+          \"service_address\": \":8125\",
           \"metrics_collection_interval\": 10,
           \"metrics_aggregation_interval\": 30
        }
