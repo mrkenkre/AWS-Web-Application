@@ -31,7 +31,7 @@ const Assignment = sequelize.define(
       type: Sequelize.INTEGER,
       allowNull: false,
       validate: {
-        min: 1,
+        min: 0,
         max: 3,
         notEmpty: true,
         isInt: {
@@ -49,7 +49,6 @@ const Assignment = sequelize.define(
     assignment_created: {
       type: Sequelize.DATE,
       readOnly: true,
-      defaultValue: () => format(new Date(), "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"),
     },
     assignment_updated: {
       type: Sequelize.DATE,
@@ -66,6 +65,20 @@ const Assignment = sequelize.define(
     },
   },
   {
+    hooks: {
+      beforeCreate: (assignment, options) => {
+        assignment.assignment_created = format(
+          new Date(),
+          "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+        );
+      },
+      beforeUpdate: (assignment, options) => {
+        assignment.assignment_updated = format(
+          new Date(),
+          "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+        );
+      },
+    },
     timestamps: false,
   }
 );
