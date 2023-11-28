@@ -20,7 +20,6 @@ const sequelize = new Sequelize(
   }
 );
 
-// check connection
 sequelize
   .authenticate()
   .then(() => {
