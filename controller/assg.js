@@ -27,19 +27,25 @@ async function postassg(req, res) {
         if (!deadline) {
           standardErrorLogger.error("Deadline cannot be null.");
           return res.status(400).json({ error: "Deadline cannot be null." });
+        } else if (
+          new Date(deadline) instanceof Date &&
+          !isNaN(new Date(deadline))
+        ) {
+          const assignmentInstance = await Assignment.create({
+            name,
+            points,
+            num_of_attempts,
+            deadline: new Date(deadline).toISOString(),
+            userid: req.user.id,
+          });
+
+          //await assignmentInstance.save();
+          standardOutputLogger.info("Assignment created.");
+          res.status(201).json(assignmentInstance);
+        } else {
+          standardErrorLogger.error("Invalid deadline.");
+          return res.status(400).json({ error: "Invalid deadline." });
         }
-
-        const assignmentInstance = await Assignment.create({
-          name,
-          points,
-          num_of_attempts,
-          deadline: new Date(deadline).toISOString(),
-          userid: req.user.id,
-        });
-
-        //await assignmentInstance.save();
-        standardOutputLogger.info("Assignment created.");
-        res.status(201).json(assignmentInstance);
       } catch (error) {
         if (error.name === "SequelizeValidationError") {
           const validationErrors = error.errors.map((err) => ({
