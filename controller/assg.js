@@ -2,13 +2,16 @@
 // const { DataTypes } = require('sequelize');
 // const sequelize = require("sequelize");
 const Assignment = require("../models/assignment");
+const Submission = require("../models/submissions");
 const { authenticate } = require("../utils/authenticator");
 const _ = require("lodash");
+const { format } = require("date-fns");
 const {
   standardOutputLogger,
   standardErrorLogger,
 } = require("../utils/logger");
 const client = require("../utils/statsdutil");
+const { publishMessage } = require("../utils/publisher");
 
 async function postassg(req, res) {
   client.increment("API.assignment.POST");
@@ -24,29 +27,26 @@ async function postassg(req, res) {
         if (!deadline) {
           standardErrorLogger.error("Deadline cannot be null.");
           return res.status(400).json({ error: "Deadline cannot be null." });
+        } else if (
+          new Date(deadline) instanceof Date &&
+          !isNaN(new Date(deadline))
+        ) {
+          const assignmentInstance = await Assignment.create({
+            name,
+            points,
+            num_of_attempts,
+            deadline: new Date(deadline).toISOString(),
+            userid: req.user.id,
+          });
+
+          //await assignmentInstance.save();
+          standardOutputLogger.info("Assignment created.");
+          res.status(201).json(assignmentInstance);
+        } else {
+          standardErrorLogger.error("Invalid deadline.");
+          return res.status(400).json({ error: "Invalid deadline." });
         }
-
-        const assignmentInstance = await Assignment.create({
-          name,
-          points,
-          num_of_attempts,
-          deadline: new Date(deadline).toISOString(),
-          userid: req.user.id,
-        });
-
-        //await assignmentInstance.save();
-        standardOutputLogger.info("Assignment created.");
-        res.status(201).json(assignmentInstance);
       } catch (error) {
-        if (error.name === "SequelizeUniqueConstraintError") {
-          standardErrorLogger.error(
-            "Assignment with the same name already exists."
-          );
-          return res
-            .status(400)
-            .json({ error: "Assignment with the same name already exists." });
-        }
-
         if (error.name === "SequelizeValidationError") {
           const validationErrors = error.errors.map((err) => ({
             field: err.path,
@@ -195,15 +195,6 @@ async function putassg(req, res) {
             standardOutputLogger.info("Assignment updated.");
             return res.status(204).json(assignment);
           } catch (error) {
-            if (error.name === "SequelizeUniqueConstraintError") {
-              standardErrorLogger.error(
-                "Assignment with the same name already exists."
-              );
-              return res.status(400).json({
-                error: "Assignment with the same name already exists.",
-              });
-            }
-
             if (error.name === "SequelizeValidationError") {
               const validationErrors = error.errors.map((err) => ({
                 field: err.path,
@@ -280,6 +271,121 @@ async function deleteassg(req, res) {
   }
 }
 
+async function submitassg(req, res) {
+  client.increment("API.assignment.POST_Submission");
+  if (JSON.stringify(req.body).length <= 2) {
+    console.log("Please pass request body.");
+    standardErrorLogger.error("Request body not found.");
+    res.status(400).send("Please pass request body.");
+  } else {
+    if (await authenticate(req, res)) {
+      try {
+        //console.log("IDDD: " + req.user.id);
+        const assignmentId = req.params.id;
+        const { submission_url } = req.body;
+        let submissionInstance;
+        const assignment = await Assignment.findByPk(assignmentId, {
+          attributes: { exclude: ["userid"] },
+        });
+        if (!assignmentId) {
+          standardErrorLogger.error("Invalid assignment ID.");
+          return res.status(404).json({ error: "Invalid assignment ID." });
+        }
+
+        if (!submission_url) {
+          standardErrorLogger.error("Invalid submission URL.");
+          return res.status(404).json({ error: "Invalid submission URL." });
+        }
+        if (!assignment) {
+          standardErrorLogger.error("Assignment not found");
+          return res.status(404).json({ error: "Assignment not found" });
+        }
+        const userId = req.user.id;
+        const existingSubmission = await Submission.findOne({
+          where: {
+            assignment_id: assignmentId,
+            userid: userId,
+          },
+        });
+
+        if (existingSubmission) {
+          const existingDeadline = assignment.deadline.toISOString();
+          const currentDate = format(
+            new Date(),
+            "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+          );
+          // console.log(
+          //   "existing deadline:" + assignment.deadline.toISOString()
+          //   // format(assignment.deadline, "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+          // );
+          // console.log(
+          //   "new Date:" + format(new Date(), "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+          // );
+          if (currentDate < existingDeadline) {
+            if (
+              existingSubmission.submission_urls.length >=
+              assignment.num_of_attempts
+            ) {
+              standardErrorLogger.error("No attempts left.");
+              return res.status(403).json({ error: "No attempts left." });
+            } else {
+              const updatedUrls =
+                existingSubmission.submission_urls.concat(submission_url);
+              submissionInstance = await existingSubmission.update({
+                submission_urls: updatedUrls,
+              });
+            }
+          } else {
+            standardErrorLogger.error("Deadline has passed.");
+            return res.status(403).json({ error: "Deadline has passed." });
+          }
+        } else {
+          submissionInstance = await Submission.create({
+            assignment_id: assignmentId,
+            submission_urls: [submission_url],
+            userid: userId,
+          });
+        }
+
+        const data = {
+          email: req.user.email,
+          url: submission_url,
+          attempts: submissionInstance.submission_urls.length,
+        };
+        const message = {
+          User_Email: data.email,
+          URL: data.url,
+          Attempts: data.attempts,
+        };
+        //console.log("Message:", JSON.stringify(message));
+        publishMessage(JSON.stringify(message));
+
+        standardOutputLogger.info("Assignment submitted.");
+        res.status(201).json(submissionInstance);
+      } catch (error) {
+        if (error.name === "SequelizeValidationError") {
+          const validationErrors = error.errors.map((err) => ({
+            field: err.path,
+            message: err.message,
+          }));
+          standardErrorLogger.error(
+            "Validation Errors:" + JSON.stringify(validationErrors)
+          );
+          return res.status(400).json({ errors: validationErrors });
+        }
+
+        console.error("Error:", error);
+        standardErrorLogger.error(
+          "Something went wrong in POST submission controller."
+        );
+        res.status(500).json({
+          error: "Something went wrong in POST submission controller.",
+        });
+      }
+    }
+  }
+}
+
 async function invalidassg(req, res) {
   client.increment("API.assignment.Invalid");
   standardErrorLogger.error("Method Not Allowed");
@@ -292,4 +398,5 @@ module.exports = {
   putassg,
   invalidassg,
   deleteassg,
+  submitassg,
 };

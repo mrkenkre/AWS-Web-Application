@@ -7,6 +7,7 @@ const {
   putassg,
   invalidassg,
   deleteassg,
+  submitassg,
 } = require("../controller/assg");
 
 router.post("/assignments", postassg);
@@ -19,6 +20,9 @@ router.put("/assignments/", putassg);
 
 router.delete("/assignments/:id", deleteassg);
 router.delete("/assignments/", deleteassg);
+
+router.post("/assignments/:id/submission", submitassg);
+router.post("/assignments//submission", submitassg);
 
 router.all("/*", invalidassg);
 
