@@ -46,3 +46,28 @@ jobs:
 
       - name: Deploy Packer Template
         run: packer build ./packer_templates/.
+
+      - name: Create New Launch Template Version
+        run: |
+          LATEST_AMI_ID=$(aws ec2 describe-images --owners self --query 'Images | sort_by(@, &CreationDate) | [-1].ImageId' --output text)
+          aws ec2 create-launch-template-version --launch-template-id asg_launch_config_v2 --source-version $LATEST_VERSION --launch-template-data "{\"ImageId\":\"$LATEST_AMI_ID\"}"
+
+      - name: Issue Instance Refresh Command
+        id: refresh_instances
+        run: |
+          INSTANCE_REFRESH_ID=$(aws autoscaling start-instance-refresh --auto-scaling-group-name webAppAutoScalingGroup --query 'InstanceRefreshId' --output text)
+          echo "Instance Refresh ID: $INSTANCE_REFRESH_ID"
+
+      - name: Wait for Instance Refresh to Complete
+        run: |
+          while true; do
+            STATUS=$(aws autoscaling describe-instance-refreshes --auto-scaling-group-name webAppAutoScalingGroup --instance-refresh-ids $INSTANCE_REFRESH_ID --query 'InstanceRefreshes[0].Status' --output text)
+            if [ "$STATUS" = "Successful" ]; then
+              echo "Instance refresh completed successfully"
+              exit 0
+            elif [ "$STATUS" = "Failed" ]; then
+              echo "Instance refresh failed"
+              exit 1
+            fi
+            sleep 30
+          done
