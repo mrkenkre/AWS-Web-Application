@@ -50,7 +50,7 @@ jobs:
       - name: Create New Launch Template Version
         run: |
           LATEST_AMI_ID=$(aws ec2 describe-images --owners self --query 'Images | sort_by(@, &CreationDate) | [-1].ImageId' --output text)
-          aws ec2 create-launch-template-version --launch-template-id asg_launch_config_v2 --source-version $LATEST_VERSION --launch-template-data "{\"ImageId\":\"$LATEST_AMI_ID\"}"
+          aws ec2 create-launch-template-version --launch-template-id asg_launch_config --source-version $LATEST_VERSION --launch-template-data "{\"ImageId\":\"$LATEST_AMI_ID\"}"
 
       - name: Issue Instance Refresh Command
         id: refresh_instances
