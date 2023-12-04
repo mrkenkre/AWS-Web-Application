@@ -56,12 +56,12 @@ jobs:
 
       - name: Update Autoscaling Group to Use New Launch Template Version
         run: |
-          aws autoscaling update-auto-scaling-group --auto-scaling-group-name webAppAutoScalingGroup --launch-template "{\"LaunchTemplateId\":\"${{vars.LAUNCH_TEMP_ID}}\",\"Version\":\$NEW_LT_VERSION\}"
+          aws autoscaling update-auto-scaling-group --auto-scaling-group-name webAppAutoScalingGroup --launch-template "LaunchTemplateId=${{vars.LAUNCH_TEMP_ID}},Version=$NEW_LT_VERSION"
 
       - name: Issue Instance Refresh Command
         id: refresh_instances
         run: |
-          INSTANCE_REFRESH_ID=$(aws autoscaling start-instance-refresh --auto-scaling-group-name webAppAutoScalingGroup --query 'InstanceRefreshId' --output text)
+          INSTANCE_REFRESH_ID=$(aws autoscaling start-instance-refresh --auto-scaling-group-name webAppAutoScalingGroup --strategy Rolling --query 'InstanceRefreshId' --output text)
           echo "Instance Refresh ID: $INSTANCE_REFRESH_ID"
 
       - name: Wait for Instance Refresh to Complete
