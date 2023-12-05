@@ -49,7 +49,7 @@ jobs:
 
       - name: Create New Launch Template Version and Update Autoscaling Group
         run: |
-          LATEST_AMI_ID=$(aws ec2 describe-images --owners "781104868468" --filters "my-packer-aws-debian*" --query 'sort_by(Images, &CreationDate)[-1].ImageId' --output text)
+          LATEST_AMI_ID=$(aws ec2 describe-images --owners "781104868468" --filters "Name=name,Values=my-packer-aws-debian*" --query 'sort_by(Images, &CreationDate)[-1].ImageId' --output text)
           echo "Latest AMI ID: $LATEST_AMI_ID"
            LT_DATA="{\"ImageId\":\"$LATEST_AMI_ID\", \"InstanceType\":\"t2.micro\"}"
           NEW_LT_VERSION=$(aws ec2 create-launch-template-version --launch-template-id ${{ vars.LAUNCH_TEMP_ID }} --launch-template-data "$LT_DATA" --query 'LaunchTemplateVersion.VersionNumber' --output text)
