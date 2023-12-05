@@ -348,11 +348,17 @@ async function submitassg(req, res) {
         }
 
         const data = {
-          email: req.user.id,
+          email: req.user.email,
           url: submission_url,
+          attempts: submissionInstance.submission_urls.length,
         };
-        const message = `User Email: ${data.email}, URL: ${data.url}`;
-        publishMessage(message);
+        const message = {
+          User_Email: data.email,
+          URL: data.url,
+          Attempts: data.attempts,
+        };
+        //console.log("Message:", JSON.stringify(message));
+        publishMessage(JSON.stringify(message));
 
         standardOutputLogger.info("Assignment submitted.");
         res.status(201).json(submissionInstance);
