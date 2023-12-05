@@ -47,6 +47,13 @@ jobs:
       - name: Deploy Packer Template
         run: packer build ./packer_templates/.
 
+      - name: Configure DEMO AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.DEMO_AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.DEMO_AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
       - name: Create New Launch Template Version and Update Autoscaling Group
         run: |
           LATEST_AMI_ID=$(aws ec2 describe-images --owners "781104868468" --filters "Name=name,Values=my-packer-aws-debian*" --query 'sort_by(Images, &CreationDate)[-1].ImageId' --output text)
